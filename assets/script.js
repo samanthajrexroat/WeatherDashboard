@@ -1,9 +1,9 @@
 //DECLARE VARIABLES
 var today = moment().format('L');
 var currentCity = "";
-var searchHistory = [];
 var mainDiv = $(".mainDiv");
 var searchHistory = $("#search-history");
+var historyArray = [];
 var current = $("#city-info");
 var fiveDay = $("#five-day");
 
@@ -20,10 +20,20 @@ $(".submit").on("click", function(event) {
     event.preventDefault();
     var city = $(".cityInput").val();
     // SET local storage here --- array of city names
-    
+    localStorage.setItem("city", JSON.stringify(historyArray));
     // IF the city is already in the array, don't push
+    
+    
     // GET array/parse it from local storage
+    localStoarge.getItem()
     // create a FOR loop that will create a button for each item in the array.
+    for (i=1; i<historyArray.length; i++) {
+        var cityBtn = $("<button>");
+        cityBtn.addClass("btn");
+        cityBtn.attr("type", "button");
+        cityBtn.attr("id", historyArray[i]);
+        searchHistory.append(cityBtn);
+    }
     currentConditions(city);
 });
 
@@ -60,18 +70,19 @@ function fetchData(lat, lon, city){
         .then(function(data2){
             console.log(data2);
             var p1 = `<p>City:${city}</p>`
-            var iconCode = data2[0].weather[0].icon;
+            var iconCode = `${data2.daily[0].weather[0].icon}`
             var iconUrl = `<img src= https://openweathermap.org/img/w/${iconCode}.png> `
             var p2 = `<p>Temp:${data2.daily[0].temp.day}</p>`
             var p3 = `<p>Wind:${data2.daily[0].wind_speed}</p>`
             var p4 = `<p>Humidity:${data2.daily[0].humidity}</p>`
             var p5 = `<p>UV Index:${data2.daily[0].uvi}</p>`
-            current.append(p1,p2,p3,p4,p5)
+            current.append(p1,today,iconUrl,p2,p3,p4,p5)
 
             for (i=1; i<6; i++){
                 var cardDiv = `
                 <div class="cardDiv">
                     <p>Temp:${data2.daily[i].temp.day}</p>
+
                     <p>Wind:${data2.daily[i].wind_speed}</p>
                     <p>Humidity:${data2.daily[i].humidity}</p>
                     <p>UV Index:${data2.daily[i].uvi}</p>
