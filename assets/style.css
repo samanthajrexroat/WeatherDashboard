@@ -1,0 +1,9 @@
+:root
+
+h1 {
+    font-size: 4rem;
+}
+
+#weather-content {
+    display: none;
+}
