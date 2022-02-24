@@ -4,8 +4,8 @@ An application that utilizes the OpenWeather One Call API to allow a user to dis
 
 ## Links
 
-[Deployed Live](https://samanthajrexroat.github.io/WeatherDashboard/)
-<br>
+[Deployed Live](https://samanthajrexroat.github.io/WeatherDashboard/)  
+
 [GitHub Repository](https://github.com/samanthajrexroat/WeatherDashboard.git)
 
 ## Functionality
@@ -29,3 +29,4 @@ An application that utilizes the OpenWeather One Call API to allow a user to dis
 * Moment.js
 
 ## Screenshots
+![Weather Dashboard Screenshot](./assets/images/WeatherDashboard.png)

@@ -6,8 +6,6 @@ var searchHistory = $("#search-history");
 var current = $("#city-info");
 var fiveDay = $("#five-day");
 
-
-
 const apiKey = 'ac785b3f1975916150e8a5fa906406d0'
 
 var historyArray = JSON.parse(localStorage.getItem("cityKey")) || [];
@@ -25,6 +23,7 @@ for (i=0; i<historyArray.length; i++) {
 $(".submit").on("click", function(event) {
     event.preventDefault();
     var city = $(".cityInput").val();
+    
     if (historyArray.includes(city)){
         return
     }else{
@@ -33,10 +32,8 @@ $(".submit").on("click", function(event) {
         searchHistory.append(cityBtn);
     }
     
-    // SET local storage here --- array of city names
     localStorage.setItem("cityKey", JSON.stringify(historyArray));
-    // IF the city is already in the array, don't push
-   $(".cityInput").val('');
+    $(".cityInput").val('');
 
     currentConditions(city);
 });
@@ -48,20 +45,13 @@ function currentConditions (city) {
         .then(function(cityApiResponse){
         console.log(cityApiResponse);
         return cityApiResponse.json()
-
     })
-
     .then(function(data){
-
-
         var lat = data[0].lat
         var lon = data [0].lon
         fetchData(lat, lon, city)
-        
-
         $("#weather-content").css("display", "block");
         $("#city-info").empty();
-
     })
 }
 
@@ -70,25 +60,23 @@ function fetchData(lat, lon, city){
         .then(function(response){
             return response.json()
         })
-
         .then(function(data2){
             console.log(data2);
             var p1 = `<p>City:${city}</p>`
             var iconCode = `${data2.daily[0].weather[0].icon}`
             var iconUrl = `<img src= https://openweathermap.org/img/w/${iconCode}.png> `
-            
             var p2 = `<p>Temp:${data2.daily[0].temp.day}</p>`
             var p3 = `<p>Wind:${data2.daily[0].wind_speed}</p>`
             var p4 = `<p>Humidity:${data2.daily[0].humidity}</p>`
             var p5 = `<p class="uvi">UV Index:${data2.daily[0].uvi}</p>`
             current.append(p1,today,iconUrl,p2,p3,p4,p5)
-            if (data2.daily[0].uvi < 5){
-                $(".uvi").css("background-color", "green")
-            }// }else if (data2.daily[0].uvi > ){
-
-            // }else{
-
-            // }
+            if (data2.daily[0].uvi < 3){
+                $(".uvi").css("background-color", "green");
+            }else if (data2.daily[0].uvi > 6 ){
+                $(".uvi").css("background-color", "red");
+            }else{
+                $(".uvi").css("background-color", "yellow");
+            }
 
             for (i=1; i<6; i++){
                 var fourDaysForward = new moment().add(i, 'day');
@@ -103,15 +91,13 @@ function fetchData(lat, lon, city){
                 `
                 fiveDay.append(cardDiv);
 
-                if (data2.daily[i].uvi < 5){
-                    $(`.uvi${i}`).css("background-color", "green")
-                }// }else if (data2.daily[i].uvi > ){
-    
-                // }else{
-                    
-                // }
+                if (data2.daily[i].uvi < 3){
+                    $(`.uvi${i}`).css("background-color", "green");
+                }else if (data2.daily[i].uvi > 6 ){
+                    $(`.uvi${i}`).css("background-color", "red");
+                }else{
+                    $(`.uvi${i}`).css("background-color", "yellow");    
+                }
             }
         })
-
-    
 }
