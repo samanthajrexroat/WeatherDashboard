@@ -4,6 +4,10 @@ h1 {
     font-size: 4rem;
 }
 
+#city-info {
+   
+}
+
 #weather-content {
     display: none;
 }
