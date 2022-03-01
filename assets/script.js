@@ -1,5 +1,5 @@
 //DECLARE VARIABLES
-var today = moment().format('L');
+var today = `<h3> ${moment().format('L')} </h3>`;
 var currentCity = "";
 var mainDiv = $(".mainDiv");
 var searchHistory = $("#search-history");
@@ -11,7 +11,7 @@ const apiKey = 'ac785b3f1975916150e8a5fa906406d0'
 var historyArray = JSON.parse(localStorage.getItem("cityKey")) || [];
 
 for (i=0; i<historyArray.length; i++) {
-    var cityBtn = `<button id="btn${i}" value=${historyArray[i]}>${historyArray[i]}</button><br>`
+    var cityBtn = `<button id="btn${i}" type ="button" class="btn btn-secondary col-12 m-1" value=${historyArray[i]}>${historyArray[i]}</button><br>`
     searchHistory.append(cityBtn);
     $(`#btn${i}`).click(function(event){
         console.log(event.target);
@@ -28,7 +28,7 @@ $(".submit").on("click", function(event) {
         return
     }else{
         historyArray.push(city)
-        var cityBtn = `<button value=${city}>${city}</button><br>`
+        var cityBtn = `<buttontype ="button" class="btn btn-secondary col-12 m-1" value=${city}>${city}</button><br>`
         searchHistory.append(cityBtn);
     }
     
@@ -62,42 +62,50 @@ function fetchData(lat, lon, city){
         })
         .then(function(data2){
             console.log(data2);
-            var p1 = `<p>City:${city}</p>`
+            var cityHead = `<h2>${city}</h2>`
             var iconCode = `${data2.daily[0].weather[0].icon}`
-            var iconUrl = `<img src= https://openweathermap.org/img/w/${iconCode}.png> `
-            var p2 = `<p>Temp:${data2.daily[0].temp.day}</p>`
-            var p3 = `<p>Wind:${data2.daily[0].wind_speed}</p>`
-            var p4 = `<p>Humidity:${data2.daily[0].humidity}</p>`
-            var p5 = `<p class="uvi">UV Index:${data2.daily[0].uvi}</p>`
-            current.append(p1,today,iconUrl,p2,p3,p4,p5)
+            var iconUrl = `<img src= https://openweathermap.org/img/w/${iconCode}.png class="img-fluid"> `
+            var p2 = `<p>Temp:  ${data2.daily[0].temp.day} &#176;F</p>`
+            var p3 = `<p>Wind:  ${data2.daily[0].wind_speed} MPH</p>`
+            var p4 = `<p>Humidity:  ${data2.daily[0].humidity} %</p>`
+            var p5 = `<p>UV Index: <span class="badge ">${data2.daily[0].uvi}</span></p>`
+            current.append(cityHead,today,iconUrl,p2,p3,p4,p5)
             if (data2.daily[0].uvi < 3){
-                $(".uvi").css("background-color", "green");
+                $(".badge").css({"background-color": "green", "color": "white"});
             }else if (data2.daily[0].uvi > 6 ){
-                $(".uvi").css("background-color", "red");
+                $(".badge").css({"background-color": "red", "color": "white"});
             }else{
-                $(".uvi").css("background-color", "yellow");
+                $(".badge").css({"background-color": "yellow", "color": "black"});
             }
+
+            $("#five-day").empty();
 
             for (i=1; i<6; i++){
                 var fourDaysForward = new moment().add(i, 'day');
                 var cardDiv = `
-                <div class="cardDiv">
-                    <p>${fourDaysForward.format('L')}</p>
-                    <p>Temp:${data2.daily[i].temp.day}</p>
-                    <p>Wind:${data2.daily[i].wind_speed}</p>
-                    <p>Humidity:${data2.daily[i].humidity}</p>
-                    <p class="uvi${i}">UV Index:${data2.daily[i].uvi}</p>
+                <div class="card text-white bg-dark m-3 cardDiv" style="max-width: 10rem;">
+                    <div class="card-body">
+                        <h5>${fourDaysForward.format('L')}</h5>
+                        <img src= https://openweathermap.org/img/w/${iconCode}.png class="img-fluid">
+                        <p>Temp:  ${data2.daily[i].temp.day} &#176;F</p>
+                        <p>Wind:  ${data2.daily[i].wind_speed} MPH</p>
+                        <p>Humidity:  ${data2.daily[i].humidity} %</p>
+                    </div>
                 </div>
                 `
                 fiveDay.append(cardDiv);
 
-                if (data2.daily[i].uvi < 3){
-                    $(`.uvi${i}`).css("background-color", "green");
-                }else if (data2.daily[i].uvi > 6 ){
-                    $(`.uvi${i}`).css("background-color", "red");
-                }else{
-                    $(`.uvi${i}`).css("background-color", "yellow");    
-                }
             }
         })
 }
+
+$(document).ready(function() {
+    var searchHistoryArr = JSON.parse(localStorage.getItem("cityKey"));
+
+    if (searchHistoryArr !== null) {
+        var lastSearchedIndex = searchHistoryArr.length - 1;
+        var lastSearchedCity = searchHistoryArr[lastSearchedIndex];
+        currentConditions(lastSearchedCity);
+        console.log(`Last searched city: ${lastSearchedCity}`);
+    }
+});
