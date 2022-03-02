@@ -1,4 +1,6 @@
 # WeatherDashboard
+
+## Description
 An application that utilizes the OpenWeather One Call API to allow a user to display the weather outlook for multiple cities.
 
 
@@ -30,3 +32,11 @@ An application that utilizes the OpenWeather One Call API to allow a user to dis
 
 ## Screenshots
 ![Weather Dashboard Screenshot](./assets/images/WeatherDashboard.png)
+
+## License
+
+MIT
+
+## Contact Information
+samanthajrexroat@gmail.com <br>
+https://github.com/samanthajrexroat
